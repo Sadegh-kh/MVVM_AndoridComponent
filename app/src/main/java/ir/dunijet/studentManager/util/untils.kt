@@ -1,7 +1,7 @@
 package ir.dunijet.studentManager.util
 
 import com.google.gson.JsonObject
-import ir.dunijet.studentManager.model.local.Student
+import ir.dunijet.studentManager.model.local.student.Student
 
 fun studentToJsonObject(student: Student):JsonObject{
 

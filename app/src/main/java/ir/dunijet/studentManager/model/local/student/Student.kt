@@ -1,4 +1,4 @@
-package ir.dunijet.studentManager.model.local
+package ir.dunijet.studentManager.model.local.student
 
 import android.os.Parcelable
 import androidx.room.Entity

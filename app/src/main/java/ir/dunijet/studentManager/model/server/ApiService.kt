@@ -2,7 +2,7 @@ package ir.dunijet.studentManager.model.server
 
 import com.google.gson.JsonObject
 import io.reactivex.Single
-import ir.dunijet.studentManager.model.local.Student
+import ir.dunijet.studentManager.model.local.student.Student
 import retrofit2.http.*
 
 

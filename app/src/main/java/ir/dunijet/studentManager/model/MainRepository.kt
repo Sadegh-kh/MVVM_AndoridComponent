@@ -2,7 +2,7 @@ package ir.dunijet.studentManager.model
 import com.google.gson.GsonBuilder
 import io.reactivex.Completable
 import io.reactivex.Single
-import ir.dunijet.studentManager.model.local.Student
+import ir.dunijet.studentManager.model.local.student.Student
 import ir.dunijet.studentManager.model.server.ApiService
 import ir.dunijet.studentManager.util.Constants
 import ir.dunijet.studentManager.util.studentToJsonObject

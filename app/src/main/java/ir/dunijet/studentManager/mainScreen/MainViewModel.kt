@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import ir.dunijet.studentManager.model.MainRepository
-import ir.dunijet.studentManager.model.local.Student
+import ir.dunijet.studentManager.model.local.student.Student
 import java.util.concurrent.TimeUnit
 
 class MainViewModel {

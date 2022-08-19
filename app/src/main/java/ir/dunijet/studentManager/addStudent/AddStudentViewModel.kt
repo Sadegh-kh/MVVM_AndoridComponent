@@ -2,7 +2,7 @@ package ir.dunijet.studentManager.addStudent
 
 import io.reactivex.Completable
 import ir.dunijet.studentManager.model.MainRepository
-import ir.dunijet.studentManager.model.local.Student
+import ir.dunijet.studentManager.model.local.student.Student
 
 class AddStudentViewModel {
 

@@ -14,7 +14,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import ir.dunijet.studentManager.addStudent.AddStudentActivity
 import ir.dunijet.studentManager.databinding.ActivityMainBinding
-import ir.dunijet.studentManager.model.local.Student
+import ir.dunijet.studentManager.model.local.student.Student
 import ir.dunijet.studentManager.recycler.StudentAdapter
 import ir.dunijet.studentManager.util.Constants
 import ir.dunijet.studentManager.util.asyncRequest

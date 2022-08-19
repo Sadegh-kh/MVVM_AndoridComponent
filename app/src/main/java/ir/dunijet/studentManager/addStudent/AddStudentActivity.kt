@@ -8,7 +8,7 @@ import io.reactivex.CompletableObserver
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import ir.dunijet.studentManager.databinding.ActivityMain2Binding
-import ir.dunijet.studentManager.model.local.Student
+import ir.dunijet.studentManager.model.local.student.Student
 import ir.dunijet.studentManager.util.Constants
 import ir.dunijet.studentManager.util.asyncRequest
 import ir.dunijet.studentManager.util.showToast
