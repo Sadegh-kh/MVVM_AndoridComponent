@@ -2,10 +2,9 @@ package ir.dunijet.studentManager.mainScreen
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import io.reactivex.functions.Action
 import io.reactivex.subjects.BehaviorSubject
 import ir.dunijet.studentManager.model.MainRepository
-import ir.dunijet.studentManager.model.Student
+import ir.dunijet.studentManager.model.local.Student
 import java.util.concurrent.TimeUnit
 
 class MainViewModel {

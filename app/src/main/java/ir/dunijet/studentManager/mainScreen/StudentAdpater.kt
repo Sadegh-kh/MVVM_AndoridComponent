@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ir.dunijet.studentManager.databinding.ItemMainBinding
-import ir.dunijet.studentManager.model.Student
+import ir.dunijet.studentManager.model.local.Student
 
 class StudentAdapter(private val data: ArrayList<Student>, val studentEvent: StudentEvent) :
     RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() {

@@ -2,6 +2,8 @@ package ir.dunijet.studentManager.model
 import com.google.gson.GsonBuilder
 import io.reactivex.Completable
 import io.reactivex.Single
+import ir.dunijet.studentManager.model.local.Student
+import ir.dunijet.studentManager.model.server.ApiService
 import ir.dunijet.studentManager.util.Constants
 import ir.dunijet.studentManager.util.studentToJsonObject
 import retrofit2.Retrofit
@@ -9,7 +11,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainRepository {
-    private val apiService:ApiService
+    private val apiService: ApiService
 
     init {
         val gson=GsonBuilder()

@@ -4,18 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
-import com.google.gson.JsonObject
 import io.reactivex.CompletableObserver
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import ir.dunijet.studentManager.databinding.ActivityMain2Binding
-import ir.dunijet.studentManager.model.Student
+import ir.dunijet.studentManager.model.local.Student
 import ir.dunijet.studentManager.util.Constants
 import ir.dunijet.studentManager.util.asyncRequest
 import ir.dunijet.studentManager.util.showToast
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class AddStudentActivity : AppCompatActivity() {
     lateinit var binding: ActivityMain2Binding

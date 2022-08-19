@@ -1,9 +1,8 @@
-package ir.dunijet.studentManager.model
+package ir.dunijet.studentManager.model.server
 
 import com.google.gson.JsonObject
-import io.reactivex.Completable
 import io.reactivex.Single
-import retrofit2.Call
+import ir.dunijet.studentManager.model.local.Student
 import retrofit2.http.*
 
 

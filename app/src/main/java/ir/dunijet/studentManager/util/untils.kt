@@ -1,9 +1,9 @@
 package ir.dunijet.studentManager.util
 
 import com.google.gson.JsonObject
-import ir.dunijet.studentManager.model.Student
+import ir.dunijet.studentManager.model.local.Student
 
-fun studentToJsonObject(student:Student):JsonObject{
+fun studentToJsonObject(student: Student):JsonObject{
 
     val jsonStudentObject= JsonObject()
     jsonStudentObject.addProperty("id",student.id)
