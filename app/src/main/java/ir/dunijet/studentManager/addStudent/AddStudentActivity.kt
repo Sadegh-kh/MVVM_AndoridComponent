@@ -4,21 +4,22 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import io.reactivex.CompletableObserver
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import ir.dunijet.studentManager.databinding.ActivityMain2Binding
+import ir.dunijet.studentManager.model.MainRepository
+import ir.dunijet.studentManager.model.local.MyDatabase
 import ir.dunijet.studentManager.model.local.student.Student
-import ir.dunijet.studentManager.util.Constants
-import ir.dunijet.studentManager.util.asyncRequest
-import ir.dunijet.studentManager.util.showToast
+import ir.dunijet.studentManager.util.*
 
 class AddStudentActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMain2Binding
-    lateinit var addStudentViewModel:AddStudentViewModel
+    private lateinit var binding: ActivityMain2Binding
+    private lateinit var addStudentViewModel:AddStudentViewModel
     private var compositeDisposable=CompositeDisposable()
     private var isInserting = true
-    var id =0
+    private var id =0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +29,10 @@ class AddStudentActivity : AppCompatActivity() {
         supportActionBar!!.setHomeButtonEnabled(true)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        addStudentViewModel=AddStudentViewModel()
+        addStudentViewModel=ViewModelProvider(this,AddStudentViewModelFactory(MainRepository(
+            ApiServiceSingleton.apiService!!,
+            MyDatabase.getDatabase(applicationContext).studentDao
+        ))).get(AddStudentViewModel::class.java)
 
         initUi()
 
