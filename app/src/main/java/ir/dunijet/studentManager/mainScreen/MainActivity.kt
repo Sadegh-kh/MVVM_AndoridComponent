@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
@@ -35,12 +37,19 @@ class MainActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbarMain)
 
-        mainViewModel=ViewModelProvider(this,MainViewModelFactory(
-            MainRepository(
-                ApiServiceSingleton.apiService!!,
-                MyDatabase.getDatabase(applicationContext).studentDao
-            )
-        )).get(MainViewModel::class.java)
+
+        val mainViewModelFactory = viewModelFactory {
+            initializer {
+                MainViewModel(
+                    MainRepository(
+                        ApiServiceSingleton.apiService!!,
+                        MyDatabase.getDatabase(applicationContext).studentDao
+                    )
+                )
+            }
+        }
+
+        mainViewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
 
         initUi()
 
@@ -55,8 +64,8 @@ class MainActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
         }
         initRecycler()
 
-        mainViewModel.getAllStudent().observe(this){
-            listSize=it.size
+        mainViewModel.getAllStudent().observe(this) {
+            listSize = it.size
 
             //refresh Recycler view when list changed
             myAdapter.refreshData(it)
@@ -67,8 +76,8 @@ class MainActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
     }
 
     private fun logErrors() {
-        mainViewModel.getError().observe(this){
-            Log.v("errors",it)
+        mainViewModel.getError().observe(this) {
+            Log.v("errors", it)
         }
     }
 
@@ -81,6 +90,7 @@ class MainActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
     override fun onItemClicked(student: Student, position: Int) {
         updateDataInServer(student)
     }
+
     private fun updateDataInServer(student: Student) {
 
         val intent = Intent(this, AddStudentActivity::class.java)
@@ -105,6 +115,7 @@ class MainActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
         }
         dialog.show()
     }
+
     private fun deleteDataFromServer(student: Student, position: Int) {
         mainViewModel
             .deleteStudent(student.id!!)

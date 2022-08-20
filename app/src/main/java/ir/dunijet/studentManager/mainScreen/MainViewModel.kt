@@ -10,34 +10,36 @@ import io.reactivex.schedulers.Schedulers
 import ir.dunijet.studentManager.model.MainRepository
 import ir.dunijet.studentManager.model.local.student.Student
 
-class MainViewModel(private val mainRepository: MainRepository):ViewModel() {
+class MainViewModel(private val mainRepository: MainRepository) : ViewModel() {
 
-    private lateinit var netDisposable:Disposable
-    private val errorData=MutableLiveData<String>()
+    private lateinit var netDisposable: Disposable
+    private val errorData = MutableLiveData<String>()
 
     init {
         mainRepository.refreshData().subscribeOn(Schedulers.io())
-            .subscribe(object :CompletableObserver{
+            .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {
-                    netDisposable=d
+                    netDisposable = d
                 }
 
                 override fun onComplete() {
                 }
 
                 override fun onError(e: Throwable) {
-                    errorData.postValue(e.message ?:"unknown error")
+                    errorData.postValue(e.message ?: "unknown error")
                 }
             })
     }
-    fun getAllStudent():LiveData<List<Student>>{
+
+    fun getAllStudent(): LiveData<List<Student>> {
         return mainRepository.getAllStudent()
     }
-    fun deleteStudent(id: Int):Completable{
+
+    fun deleteStudent(id: Int): Completable {
         return mainRepository.deleteStudent(id)
     }
 
-    fun getError():LiveData<String>{
+    fun getError(): LiveData<String> {
         return errorData
     }
 
