@@ -1,5 +1,6 @@
 package ir.dunijet.studentManager.recycler
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,10 +54,11 @@ class StudentAdapter(private val data: ArrayList<Student>, val studentEvent: Stu
     }
 
 
-    fun removeItem(student: Student, position: Int) {
-
-        data.remove(student)
-        notifyItemRemoved(position)
+    @SuppressLint("NotifyDataSetChanged")
+    fun refreshData(it: List<Student>?) {
+        data.clear()
+        data.addAll(ArrayList(it!!))
+        notifyDataSetChanged()
 
     }
 

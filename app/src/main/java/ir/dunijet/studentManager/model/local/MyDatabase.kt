@@ -11,22 +11,26 @@ import ir.dunijet.studentManager.model.local.student.StudentDao
 abstract class MyDatabase:RoomDatabase() {
     abstract val studentDao: StudentDao
 
-    @Volatile
-    private var dataBase:MyDatabase?=null
-    fun getDatabase(context: Context):MyDatabase{
+    companion object{
+        @Volatile
+        private var dataBase:MyDatabase?=null
 
-        synchronized(this){
-            if (dataBase==null){
-                dataBase= Room.databaseBuilder(
-                    context.applicationContext,
-                    MyDatabase::class.java,
-                    "myDatabase.db"
-                )
-                    .build()
+        fun getDatabase(context: Context):MyDatabase{
+
+            synchronized(this){
+                if (dataBase==null){
+                    dataBase= Room.databaseBuilder(
+                        context.applicationContext,
+                        MyDatabase::class.java,
+                        "myDatabase.db"
+                    )
+                        .build()
+                }
+                return dataBase!!
             }
-            return dataBase!!
         }
     }
+
 
 
 }

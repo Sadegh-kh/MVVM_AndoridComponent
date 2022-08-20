@@ -7,7 +7,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiServiceSingleton {
-    private var apiService: ApiService? = null
+    var apiService: ApiService? = null
         get() {
             if (field == null) {
 

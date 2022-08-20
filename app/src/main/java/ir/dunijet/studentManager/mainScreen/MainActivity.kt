@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
@@ -14,16 +15,16 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import ir.dunijet.studentManager.addStudent.AddStudentActivity
 import ir.dunijet.studentManager.databinding.ActivityMainBinding
+import ir.dunijet.studentManager.model.MainRepository
+import ir.dunijet.studentManager.model.local.MyDatabase
 import ir.dunijet.studentManager.model.local.student.Student
 import ir.dunijet.studentManager.recycler.StudentAdapter
-import ir.dunijet.studentManager.util.Constants
-import ir.dunijet.studentManager.util.asyncRequest
-import ir.dunijet.studentManager.util.showToast
+import ir.dunijet.studentManager.util.*
 
 
 class MainActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
-    lateinit var binding: ActivityMainBinding
-    lateinit var myAdapter: StudentAdapter
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var myAdapter: StudentAdapter
     private var compositeDisposable = CompositeDisposable()
     lateinit var mainViewModel: MainViewModel
     private var listSize = 0
@@ -33,9 +34,16 @@ class MainActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbarMain)
-        mainViewModel = MainViewModel()
+
+        mainViewModel=ViewModelProvider(this,MainViewModelFactory(
+            MainRepository(
+                ApiServiceSingleton.apiService!!,
+                MyDatabase.getDatabase(applicationContext).studentDao
+            )
+        )).get(MainViewModel::class.java)
 
         initUi()
+
     }
 
     private fun initUi() {
@@ -45,52 +53,35 @@ class MainActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
             intent.putExtra(Constants.STUDENT_INSERT_KEY, listSize + 1)
             startActivity(intent)
         }
+        initRecycler()
 
-        //Progress Bar=>
-        var count = 0
-        val disposableProgressBar=mainViewModel.progressBarSubject.subscribe{
-            if (it&&count==0){
-                binding.progressLoadStudentList.visibility=View.VISIBLE
-                count++
-            }else{
-                binding.progressLoadStudentList.visibility=View.INVISIBLE
-            }
+        mainViewModel.getAllStudent().observe(this){
+            listSize=it.size
+
+            //refresh Recycler view when list changed
+            myAdapter.refreshData(it)
         }
-        compositeDisposable.add(disposableProgressBar)
+
+        logErrors()
+
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        mainViewModel
-            .getAllStudent()
-            .asyncRequest()
-            .subscribe(object : SingleObserver<List<Student>> {
-                override fun onSubscribe(d: Disposable) {
-                    compositeDisposable.add(d)
-                }
-
-                override fun onSuccess(t: List<Student>) {
-                    setDataToRecycler(t)
-                }
-
-                override fun onError(e: Throwable) {
-                    Log.v("observerError", e.message!!)
-                }
-            })
+    private fun logErrors() {
+        mainViewModel.getError().observe(this){
+            Log.v("errors",it)
+        }
     }
-    fun setDataToRecycler(data: List<Student>) {
-        val myData = ArrayList(data)
-        listSize=data.size
-        myAdapter = StudentAdapter(myData, this)
+
+    private fun initRecycler() {
+        myAdapter = StudentAdapter(ArrayList(), this)
         binding.recyclerMain.adapter = myAdapter
         binding.recyclerMain.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
     }
 
     override fun onItemClicked(student: Student, position: Int) {
-        updateDataInServer(student, position)
+        updateDataInServer(student)
     }
-    private fun updateDataInServer(student: Student, position: Int) {
+    private fun updateDataInServer(student: Student) {
 
         val intent = Intent(this, AddStudentActivity::class.java)
         intent.putExtra(Constants.STUDENT_UPDATE_KEY, student)
@@ -115,9 +106,6 @@ class MainActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
         dialog.show()
     }
     private fun deleteDataFromServer(student: Student, position: Int) {
-
-        myAdapter.removeItem(student, position)
-
         mainViewModel
             .deleteStudent(student.id!!)
             .asyncRequest()
@@ -134,8 +122,6 @@ class MainActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
                     showToast("i can't delete this item because : ${e.message}")
                 }
             })
-
-
     }
 
     override fun onDestroy() {
