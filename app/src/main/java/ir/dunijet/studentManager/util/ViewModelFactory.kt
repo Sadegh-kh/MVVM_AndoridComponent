@@ -10,9 +10,14 @@ import ir.dunijet.studentManager.model.MainRepository
 
 
 class MainViewModelFactory(private val mainRepository: MainRepository) :
-    ViewModelProvider.NewInstanceFactory() {
+    ViewModelProvider.AndroidViewModelFactory(){
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        return MainViewModel(mainRepository) as T
+        return when(modelClass){
+            MainViewModel::class.java->{
+                MainViewModel(mainRepository) as T
+            }
+            else-> throw IllegalArgumentException("Unknown class $modelClass")
+        }
     }
 }
 

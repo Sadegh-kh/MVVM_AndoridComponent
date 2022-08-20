@@ -49,7 +49,10 @@ class MainActivity : AppCompatActivity(), StudentAdapter.StudentEvent {
             }
         }
 
-        mainViewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProvider(this, MainViewModelFactory(MainRepository(
+            ApiServiceSingleton.apiService!!,
+            MyDatabase.getDatabase(applicationContext).studentDao
+        ))).get(MainViewModel::class.java)
 
         initUi()
 
