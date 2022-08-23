@@ -5,6 +5,9 @@ import ir.dunijet.studentManager.model.local.student.Student
 import ir.dunijet.studentManager.model.local.student.StudentDao
 import ir.dunijet.studentManager.model.server.ApiService
 import ir.dunijet.studentManager.util.studentToJsonObject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainRepository(
     private val apiService: ApiService,
@@ -24,20 +27,18 @@ class MainRepository(
     }
 
 
-    fun insertStudent(student: Student):Completable{
+    suspend fun insertStudent(student: Student):String{
         val studentJson= studentToJsonObject(student)
-        return apiService.insertStudent(studentJson)
-            .doOnSuccess {
-                studentDao.insertOrUpdate(student)
-            }.ignoreElement()
+        val resultInsert=apiService.insertStudent(studentJson)
+        studentDao.insertOrUpdate(student)
+        return resultInsert
     }
-    fun updateStudent(student: Student):Completable{
+    suspend fun updateStudent(student: Student):String{
         val studentJson= studentToJsonObject(student)
-        return apiService.updateStudent(student.id!!,studentJson)
-            .doOnSuccess {
-                studentDao.insertOrUpdate(student)
-            }
-            .ignoreElement()
+        val resultUpdate=apiService.updateStudent(student.id!!,studentJson)
+        studentDao.insertOrUpdate(student)
+
+        return resultUpdate
     }
     fun deleteStudent(id: Int):Completable{
         return apiService.deleteStudent(id)

@@ -2,9 +2,11 @@ package ir.dunijet.studentManager.addStudent
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import io.reactivex.CompletableObserver
@@ -16,6 +18,7 @@ import ir.dunijet.studentManager.model.MainRepository
 import ir.dunijet.studentManager.model.local.MyDatabase
 import ir.dunijet.studentManager.model.local.student.Student
 import ir.dunijet.studentManager.util.*
+import kotlin.math.log
 
 class AddStudentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMain2Binding
@@ -47,6 +50,13 @@ class AddStudentActivity : AppCompatActivity() {
             ViewModelProvider(this, addStudentViewModelFactory).get(AddStudentViewModel::class.java)
 
         initUi()
+
+        addStudentViewModel.getResultList().observe(this){
+            Log.v("testCoroutine",it)
+        }
+        addStudentViewModel.getErrorList().observe(this){
+            Log.v("testCoroutine",it)
+        }
 
     }
 
@@ -97,7 +107,7 @@ class AddStudentActivity : AppCompatActivity() {
             course.isNotEmpty() &&
             score.isNotEmpty()
         ) {
-
+/*
             addStudentViewModel.updateStudent(Student(id, firstName, lastName, course, score))
                 .asyncRequest()
                 .subscribe(object : CompletableObserver {
@@ -113,7 +123,11 @@ class AddStudentActivity : AppCompatActivity() {
                     override fun onError(e: Throwable) {
                         showToast("Failed to update because ${e.message}")
                     }
-                })
+                })*/
+            val checkComplete=addStudentViewModel.updateStudent(Student(id, firstName, lastName, course, score))
+            if (checkComplete.isCompleted){
+                onBackPressed()
+            }
 
 
         } else {
@@ -136,7 +150,7 @@ class AddStudentActivity : AppCompatActivity() {
             course.isNotEmpty() &&
             score.isNotEmpty()
         ) {
-            addStudentViewModel.insertStudent(Student(id, firstName, lastName, course, score))
+          /*  addStudentViewModel.insertStudent(Student(id, firstName, lastName, course, score))
                 .asyncRequest()
                 .subscribe(object : CompletableObserver {
                     override fun onSubscribe(d: Disposable) {
@@ -151,7 +165,10 @@ class AddStudentActivity : AppCompatActivity() {
                     override fun onError(e: Throwable) {
                         showToast("Failed to Insert new student because ${e.message}")
                     }
-                })
+                })*/
+
+            addStudentViewModel.insertStudent(Student(id, firstName, lastName, course, score))
+            onBackPressed()
 
         } else {
             Toast.makeText(this, "لطفا اطلاعات را کامل وارد کنید", Toast.LENGTH_SHORT).show()

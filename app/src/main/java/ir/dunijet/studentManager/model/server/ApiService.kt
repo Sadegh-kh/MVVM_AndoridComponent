@@ -12,10 +12,10 @@ interface ApiService {
     fun getAllStudent():Single<List<Student>>
 
     @POST("/student")
-    fun insertStudent(@Body body:JsonObject):Single<String>
+    suspend fun insertStudent(@Body body:JsonObject):String
 
     @PUT("/student/update{Id}")
-    fun updateStudent(@Path("Id")id:Int,@Body jsonObject: JsonObject):Single<String>
+    suspend fun updateStudent(@Path("Id")id:Int,@Body jsonObject: JsonObject):String
 
     @DELETE("/student/delete{Id}")
     fun deleteStudent(@Path("Id")id:Int):Single<String>
